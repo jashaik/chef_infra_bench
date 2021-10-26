@@ -5,7 +5,8 @@
   {mod, {chef_infra_bench_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    lager
    ]},
   {env,[]},
   {modules, []},
