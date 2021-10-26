@@ -29,7 +29,13 @@ init([]) ->
     SupFlags = #{strategy => one_for_all,
                  intensity => 0,
                  period => 1},
-    ChildSpecs = [],
+    %ChildSpecs = [],
+    ChildSpecs = [#{id => chef_infra_load_config,
+                    start => {chef_infra_load_config, start_link, ["dummy"]},
+                    restart => permanent,
+                    shutdown => brutal_kill,
+                    type => worker,
+                    modules => [chef_infra_load_config]}],
     {ok, {SupFlags, ChildSpecs}}.
 
 %% internal functions

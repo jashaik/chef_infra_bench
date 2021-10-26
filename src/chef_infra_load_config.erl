@@ -24,6 +24,7 @@
 %%% 
 %%% =======================================================
 start_link(AccessLogPath) ->
+    io:format("starting the load config module ~p~n",[""]),
     gen_server:start_link(?MODULE, [AccessLogPath], []).
 
 run() ->
