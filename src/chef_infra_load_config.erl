@@ -65,6 +65,7 @@ handle_info(start_reading, #state{log_path = Path} = State) ->
   [spawn(chef_infra_load_config, knife_exec,[lists:sublist(List1, X*500+1, 500)])
       || X <- lists:seq(0,Worker_num-1)],
   %io:format("The res - ~p~n",[string:tokens(Res1, "\n\"")]),
+  erlang:send_after(120000, self(), start_reading),
   {noreply, State};
 
 handle_info(_, State) ->
