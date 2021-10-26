@@ -79,8 +79,8 @@ terminate(normal, _State) ->
 
 knife_exec(SubList) ->
   %io:format("knife exec - ~p~n",[length(SubList)]),
-  %[spawn(chef_infra_load_config, run_knife_cmd,[X])|| X <- SubList].
-  [chef_infra_load_config:run_knife_cmd(X)|| X <- SubList].
+  [spawn(chef_infra_load_config, run_knife_cmd,[X])|| X <- SubList].
+  %[chef_infra_load_config:run_knife_cmd(X)|| X <- SubList].
 
 run_knife_cmd(URL) ->
   Command = "knife raw -m " ++ URL,
