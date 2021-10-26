@@ -15,8 +15,6 @@
 
 -define(SERVER, ?MODULE).
 
--define(CHUNKS, 50).
-
 -record(state, {log_path,
                 current_position = 0,
                 total_lines}).
@@ -32,7 +30,7 @@ start_link(AccessLogPath) ->
 run() ->
   Res1 = os:cmd("grep \" 404 \" access.log | tail -n 10000 | awk '{ print $6 \" \" $7 }' "),
   List1 = string:tokens(Res1, "\n\""),
-  Worker_num = erlang:round(length(List1) / 50),
+  Worker_num = erlang:round(length(List1) / 500),
  % [chef_infra_load_config:knife_exec(lists:sublist(List1, X*Worker_num+1, 500))
   %    || X <- lists:seq(0,Worker_num-1)].
   [spawn(chef_infra_load_config, knife_exec,[lists:sublist(List1, X*Worker_num+1, 500)])
@@ -63,8 +61,8 @@ handle_cast(_Msg, State) ->
 handle_info(start_reading, #state{log_path = Path} = State) ->
     Res1 = os:cmd("grep \" 404 \" access.log | tail -n 10000 | awk '{ print $6 \" \" $7 }' "),
     List1 = string:tokens(Res1, "\n\""),
-  Worker_num = erlang:round(length(List1) / ?CHUNKS),
-  [spawn(chef_infra_load_config, knife_exec,[lists:sublist(List1, X* ?CHUNKS +1, ?CHUNKS)])
+  Worker_num = erlang:round(length(List1) / 500),
+  [spawn(chef_infra_load_config, knife_exec,[lists:sublist(List1, X*500+1, 500)])
       || X <- lists:seq(0,Worker_num-1)],
   %io:format("The res - ~p~n",[string:tokens(Res1, "\n\"")]),
   erlang:send_after(120000, self(), start_reading),
